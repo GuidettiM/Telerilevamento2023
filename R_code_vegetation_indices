@@ -1,0 +1,21 @@
+# Calculate spectral indices
+
+library(raster)
+
+setwd("C:/lab/")
+
+# Exercise: import defor1_.png (LandSat image)
+l1992 <- brick("defor1_.png")
+
+# Exercise: plot the image via plotRG
+plotRGB(l1992, r=1, g=2, b=3, stretch="lin") #vegetation is red=>is NIR. 
+
+# NIR = 1
+# RED = 2
+# GREEN = 3
+
+# Exercise: calculatew DVI for 1992 (DVI=NIR-RED for each pixel)
+dvi1992 <- l1992[[1]] - l1992[[2]]
+cl <- colorRampPalette(c('darkblue','yellow','red','black')) (100)
+plot(dvi1992, col=cl) # red parts are the ones with greater DVI
+
