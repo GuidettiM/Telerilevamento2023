@@ -19,3 +19,6 @@ dvi1992 <- l1992[[1]] - l1992[[2]]
 cl <- colorRampPalette(c('darkblue','yellow','red','black')) (100)
 plot(dvi1992, col=cl) # red parts are the ones with greater DVI
 
+l2006 <- brick("defor2_.png")
+
+plotRGB(l2006, 1, 2, 3, stretch="Lin"
