@@ -42,6 +42,6 @@ scale_fill_viridis(option="viridis")
 #inferno
 p2 <- ggplot() +
 geom_raster(sd3d, mapping=aes(x=x, y=y, fill=layer)) + #you find "layer" in sd3 info: it's the object you want to paint. 
-scale_fill_viridis(option="inferno") + #use the viridis option "inferno"
+scale_fill_viridis(option="inferno") # #use the viridis option "inferno"
 
 p1+p2
