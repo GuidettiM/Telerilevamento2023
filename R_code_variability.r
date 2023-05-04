@@ -45,3 +45,14 @@ geom_raster(sd3d, mapping=aes(x=x, y=y, fill=layer)) + #you find "layer" in sd3 
 scale_fill_viridis(option="inferno") # #use the viridis option "inferno"
 
 p1+p2
+
+#use NIR and its standard deviation
+
+nird <- as.data.frame(nir, xy=T)
+
+p3 <- ggplot() +
+geom_raster(nird, mapping=aes(x=x, y=y, fill=sentinel_1)) + #you find "layer" in sd3 info: it's the object you want to paint. 
+scale_fill_viridis(option="cividis") # #use the viridis option "cividis"
+
+
+p3+p1
