@@ -1,69 +1,41 @@
-# R code for multivariate analysis
+# How to reduce a multidimensional dataset
 
 library(raster)
-library(RStoolbox)
 library(ggplot2)
-library(patchwork)
 library(viridis)
 
 setwd("~/lab/") # Linux
 # setwd("C:/lab/") # Windows
-# setwd("/Users/name/Desktop/lab/") # Mac 
+# setwd("/Users/name/Desktop/lab/") # Mac
 
-p224r63_2011 <- brick("p224r63_2011_masked.grd")
+sen <- brick("sentinel.png")
 
-plot(p224r63_2011)
+sen2 <- stack(sen[[1]], sen[[2]], sen[[3]])
 
-# ricampionamento: resampling
-p224r63_2011res <- aggregate(p224r63_2011, fact=10)
+sample <- sampleRandom(sen2, 10000)
 
-g1 <- ggRGB(p224r63_2011, 4,3,2)
-g2 <- ggRGB(p224r63_2011res, 4,3,2)
+pca <- prcomp(sample) # pca=principal component analysis
 
-g1+g2
+summary(pca)
 
-# aggressive resampling 
-p224r63_2011res100 <- aggregate(p224r63_2011, fact=100)
+pci <- predict(sen2, pca, index=c(1:3))
+plot(pci)
+plot(pci[[1]])
 
-g1 <- ggRGB(p224r63_2011, 4,3,2)
-g2 <- ggRGB(p224r63_2011res, 4,3,2)
-g3 <- ggRGB(p224r63_2011res100, 4,3,2)
+# ggplot
 
-g1+g2+g3
+pcid <- as.data.frame(pci[[1]], xy=T)
+pcid
 
-# PCA analysis
-p224r63_2011respca <- rasterPCA(p224r63_2011res)
+ggplot() +
+geom_raster(pcid, mapping=aes(x=x, y=y, fill=PC1)) +
+scale_fill_viridis() # direction=-1 in case of reverse colour ramp
 
-# $call
-# $model
-# $map
+# focal sd
+sd3 <- focal(pci[[1]], matrix(1/9, 3, 3), fun=sd)
 
-summary(p224r63_2011respca$model)
+sd3d <- as.data.frame(sd3, xy=T)
 
-plot(p224r63_2011respca$map)
-
-g1 <- ggplot() + 
-geom_raster(p224r63_2011respca$map, mapping=aes(x=x, y=y, fill=PC1)) + 
-scale_fill_viridis(option = "inferno") +
-ggtitle("PC1")
-
-g2 <- ggplot() + 
-geom_raster(p224r63_2011respca$map, mapping=aes(x=x, y=y, fill=PC7)) + 
-scale_fill_viridis(option = "inferno") +
-ggtitle("PC7")
-
-g1+g2
-
-g3 <- ggplot() + 
-geom_raster(p224r63_2011res, mapping=aes(x=x, y=y, fill=B4_sre)) + 
-scale_fill_viridis(option = "inferno") +
-ggtitle("NIR")
-
-g1+g3
-
-g4 <- ggRGB(p224r63_2011, 2, 3, 4, stretch="hist")
-
-g1+g4
-
-plotRGB(p224r63_2011respca$map, 1, 2, 3, stretch="lin")
-plotRGB(p224r63_2011respca$map, 5, 6, 7, stretch="lin")
+ggplot() +
+geom_raster(sd3d, mapping=aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis()
