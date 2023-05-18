@@ -34,4 +34,4 @@ sc.crop <- crop(sc, ext) # crop the sc image with extension previously defined
 sc.crop.d <- as.data.frame(sc, xy=T)
 ggplot()+
 geom_raster(sc.crop.d, mapping=aes(x=x, y=y, fill=Surface.Soil.Moisture))+
-scale_fill_viridis(options="cividis")
+scale_fill_viridis(option="cividis")
