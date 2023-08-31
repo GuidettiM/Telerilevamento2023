@@ -15,3 +15,5 @@ rlist <- list.files(pattern="B0") #creates a list of all elements that have "B0"
 rimp <- lapply(rlist, raster) #applies a function (raster) to the list previously created
 
 s2_21_08 <- stack(rimp) #stacks all files of the list together
+
+#Now we have to plot using plotrgb .....
