@@ -1,5 +1,5 @@
 
-setwd("C:/lab/R10m_21_08")
+setwd("C:/lab/R10m_23_04")
 # Load the needed packages
 library(raster)
 
@@ -9,11 +9,18 @@ library(raster)
 #s2_21_08_b <- raster("T32TQQ_20230821T100601_B04_10m.jp2")
 #s2_21_08_nir <- raster("T32TQQ_20230821T100601_B08_10m.jp2")
 
+# Image before the Emilia-Romagna 2023 flood
+rlist_pre <- list.files(pattern="B0") #creates a list of all elements that have "B0" in common
 
-rlist <- list.files(pattern="B0") #creates a list of all elements that have "B0" in common
+rimp_pre <- lapply(rlist_pre, raster) #applies a function (raster) to the list previously created
 
-rimp <- lapply(rlist, raster) #applies a function (raster) to the list previously created
+s2_23_04 <- stack(rimp_pre) #stacks all files of the list together
 
-s2_21_08 <- stack(rimp) #stacks all files of the list together
+# B02 = b (492.7 nm)
+# B03 = g (559.8 nm)
+# B04 = r (664.6 nm)
+# B08 = NIR (832.8 nm)
 
-#Now we have to plot using plotrgb .....
+# True color image (pre-flood)
+plotRGB(s2_23_04, r=3, g=2, b=1, stretch="lin") 
+
