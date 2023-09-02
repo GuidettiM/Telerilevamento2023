@@ -62,6 +62,8 @@ SSC = 30.03*(s2_23_05[[3]] / s2_23_05[[2]])^(3.3187)
 
 #plotting with ggplot2
 SSCd <- as.data.frame(SSC, xy=TRUE) #you transform a matrix in a tabel
+#names(SSCd) <- c("x", "y", "z") # change the third variable name from "layer" to "SSC (mg/L)" 
+head(SSCd)
 
 ggplot() +
 geom_raster(SSCd, mapping=aes(x=x, y=y, fill=layer)) + #you find "layer" in sd3 info: it's the object you want to paint. 
@@ -76,7 +78,8 @@ SSC.crop.d <- as.data.frame(SSC.crop, xy=TRUE)
 
 ggplot() +
 geom_raster(SSC.crop.d, mapping=aes(x=x, y=y, fill=layer)) + #you find "layer" in sd3 info: it's the object you want to paint. 
-scale_fill_viridis(option="turbo")
+scale_fill_viridis(option="turbo")+
+ggtitle("SSC (mg/L)")
 
 # Crop number 2
 ext2 <- c(770000, 790000, 4940000, 4960000) # The coordinates are: x min, x max; y min; y max
