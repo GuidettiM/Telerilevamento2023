@@ -11,7 +11,7 @@ dsm_2013 <- raster("2013Elevation_DigitalElevationModel-0.5m.tif") # create the 
 
 dsm_2013d <- as.data.frame(dsm_2013, xy=T) # transform the raster file in a data frame file
 
-names(dsm_2013d <- c("x", "y", "z")) # change the z variable name
+names(dsm_2013d) <- c("x", "y", "z") # change the z variable name
 head(dsm_2013d) # now the z name is way simpler!
 
 ggplot()+
