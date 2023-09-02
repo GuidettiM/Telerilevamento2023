@@ -61,8 +61,8 @@ dev.off()
 SSC = 30.03*(s2_23_05[[3]] / s2_23_05[[2]])^(3.3187) 
 
 #plotting with ggplot2
-SSCd <- as.data.frame(SSC, xy=TRUE) #you transform a matrix in a tabel
-#names(SSCd) <- c("x", "y", "z") # change the third variable name from "layer" to "SSC (mg/L)" 
+SSCd <- as.data.frame(SSC, xy=TRUE) #you transform a matrix in a table
+#names(SSCd) <- c('x', 'y', 'z') # change the third variable name from "layer" to "SSC (mg/L)" 
 head(SSCd)
 
 ggplot() +
