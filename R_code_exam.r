@@ -59,15 +59,17 @@ plotRGB(s2_23_04, r=3, g=2, b=1, stretch="lin")
 plotRGB(s2_23_05, r=3, g=2, b=1, stretch="lin")
 dev.off() # closes the plot
 
-# Estimate the SSC (Zhan et al., 2019)
-#SSC <- 0.4932*exp(4.2145*(s2_23_05[[3]] / s2_23_05[[2]]))
-#plot(SSC, col=cl)
+#---------------------------------------------------------------------------------------------------------------------
 
-# Estimate the SSC (Sutari et al., 2020)
+# Estimate the pre-flood SSC (Sutari et al., 2020)
+SSC.pre = 30.03*(s2_23_04[[3]] / s2_23_04[[2]])^(3.3187) # the result is in mg/L
+plot(SSC) # simple plot of SSC
+
+# Estimate the post-flood SSC (Sutari et al., 2020)
 SSC = 30.03*(s2_23_05[[3]] / s2_23_05[[2]])^(3.3187) # the result is in mg/L
 plot(SSC) # simple plot of SSC
 
-# Plot SSC map with ggplot2
+# Plot post-flood SSC map with ggplot2
 SSCd <- as.data.frame(SSC, xy=TRUE) # transforms a matrix in a table
 #names(SSCd) <- c('x', 'y', 'z') # change the third variable name from "layer" to "SSC (mg/L)" 
 head(SSCd) # prints only the first elements of the list.
@@ -78,18 +80,47 @@ geom_raster(SSCd, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3
 scale_fill_viridis(option="cividis")
 # With Viridis packages you can plot with colours visible for everyone
 
-# Let's crop the image using the needed coordinates 
+
+#--------------------------------------------------------------------------------------------------------------------------------
+# Let's crop the image using the needed coordinates (pre-flood)
+ext <- c(770000, 790000, 4950000, 4970000) # creates a coordinates vector. The coordinates are: x min, x max; y min; y max.
+SSC.pre.crop <- crop(SSC.pre, ext) # crops the image
+
+SSC.pre.crop.d <- as.data.frame(SSC.pre.crop, xy=TRUE) # transforms the matrix in a table
+
+# Let's plot the cropped image using ggplot 
+p11 <- ggplot() +
+geom_raster(SSC.pre.crop.d, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3 info: it's the object you want to paint. 
+scale_fill_viridis(option="turbo")+
+ggtitle("SSC - 23/04/2023") # assigns a title to the plot
+
+# Let's crop the image using the needed coordinates (post-flood)
 ext <- c(770000, 790000, 4950000, 4970000) # creates a coordinates vector. The coordinates are: x min, x max; y min; y max.
 SSC.crop <- crop(SSC, ext) # crops the image
 
 SSC.crop.d <- as.data.frame(SSC.crop, xy=TRUE) # transforms the matrix in a table
 
 # Let's plot the cropped image using ggplot 
+p12 <- ggplot() +
+geom_raster(SSC.crop.d, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3 info: it's the object you want to paint. 
+scale_fill_viridis(option="turbo")+
+ggtitle("SSC - 23/05/2023") # assigns a title to the plot
+
+# Let's plot the 2 cropped images next to each other
+par(mfrow=c(1,2)) # puts the images in 1 line and 2 columns
+ggplot() +
+geom_raster(SSC.pre.crop.d, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3 info: it's the object you want to paint. 
+scale_fill_viridis(option="turbo")+
+ggtitle("SSC (mg/L)") # assigns a title to the plot
+
 ggplot() +
 geom_raster(SSC.crop.d, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3 info: it's the object you want to paint. 
 scale_fill_viridis(option="turbo")+
 ggtitle("SSC (mg/L)") # assigns a title to the plot
 
+dev.off()
+
+#--------------------------------------------------------------------------------------------------------------------------------
 # Crop number 2
 ext2 <- c(770000, 790000, 4940000, 4960000) # The coordinates are: x min, x max; y min; y max
 SSC.crop2 <- crop(SSC, ext2) # crops the image
