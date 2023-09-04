@@ -55,8 +55,8 @@ plotRGB(s2_23_05, r=4, g=2, b=1, stretch="lin", col=cl)
 
 # Plot the 2 true color images (pre and post-flood) next to each other
 par(mfrow=c(1,2)) # puts the images in 1 line and 2 columns
-plotRGB(s2_23_04, r=3, g=2, b=1, stretch="lin")
-plotRGB(s2_23_05, r=3, g=2, b=1, stretch="lin")
+plotRGB(s2_23_04, r=3, g=2, b=1, stretch="lin", axes=TRUE, main="23/04/2023")
+plotRGB(s2_23_05, r=3, g=2, b=1, stretch="lin", axes=TRUE, main="23/05/2023")
 dev.off() # closes the plot
 
 #---------------------------------------------------------------------------------------------------------------------
