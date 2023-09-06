@@ -14,7 +14,7 @@ library(ggplot2)
 library(viridis)
 
 # Set working directory to the pre-flood files 
-setwd("C:/lab/R10m_23_04")
+setwd("C:/lab/R10m_23_04") # this works for Windows
 
 # Image before the Emilia-Romagna 2023 flood
 rlist_pre <- list.files(pattern="B0") # creates a list of all the elements that have "B0" in common
@@ -22,7 +22,9 @@ rlist_pre <- list.files(pattern="B0") # creates a list of all the elements that 
 rimp_pre <- lapply(rlist_pre, raster) # applies a function (raster) to the list previously created
 
 s2_23_04 <- stack(rimp_pre) # stacks all files of the list together
+# in this way I obtain an object containing a raster file for each band.
 
+# The following are the bands as acquired by Sentinel 2:
 # B02 = b (492.7 nm)
 # B03 = g (559.8 nm)
 # B04 = r (664.6 nm)
@@ -43,7 +45,7 @@ plotRGB(s2_23_04, r=4, g=2, b=1, stretch="lin", col=cl)
 setwd("C:/lab/R10m_23_05")
 
 # Image after the Emilia-Romagna 2023 flood
-rlist_post <- list.files(pattern="B0") # same passages as in lines 19-24, but with post-flood image
+rlist_post <- list.files(pattern="B0") # same passages as in lines 20-24, but with post-flood image
 rimp_post <- lapply(rlist_post, raster)
 s2_23_05 <- stack(rimp_post) # this file contains all the bands (b, g, r, NIR)
 
@@ -65,30 +67,32 @@ dev.off() # closes the plot
 SSC.pre = 30.03*((s2_23_04[[3]] / s2_23_04[[2]])^(3.3187)) # the result is in mg/L
 
 #SSC.pre = 0.4932*exp(4.2145*(s2_23_04[[3]] / s2_23_04[[2]])) # (Zhan et al., 2019)
-plot(SSC) # simple plot of SSC
+
+plot(SSC.pre) # simple plot of SSC.pre
 
 # Estimate the post-flood SSC (Sutari et al., 2020)
 SSC = 30.03*((s2_23_05[[3]] / s2_23_05[[2]])^(3.3187)) # the result is in mg/L
 
 #SSC = 0.4932*exp(4.2145*(s2_23_05[[3]] / s2_23_05[[2]])) # (Zhan et al., 2019)
+
 plot(SSC) # simple plot of SSC
 
-# Plot post-flood SSC map with ggplot2
+# Plot post-flood total SSC map with ggplot2
 SSCd <- as.data.frame(SSC, xy=TRUE) # transforms a matrix in a table
-#names(SSCd) <- c('x', 'y', 'z') # change the third variable name from "layer" to "SSC (mg/L)" 
+
 head(SSCd) # prints only the first elements of the list.
 # There are 3 columns: x coordinate, y coordinate and "layer": the latter represents the SSC previously estimated
 
 ggplot() +
 geom_raster(SSCd, mapping=aes(x=x, y=y, fill=layer)) + # you find "layer" in sd3 info: it's the object you want to paint. 
-scale_fill_viridis(option="cividis")
+scale_fill_viridis(option="cividis") # sets the color scale
 # With Viridis packages you can plot with colours visible for everyone
 
 
 #--------------------------------------------------------------------------------------------------------------------------------
 # Let's crop the image using the needed coordinates (pre-flood)
 ext <- c(770000, 790000, 4950000, 4970000) # creates a coordinates vector. The coordinates are: x min, x max; y min; y max.
-SSC.pre.crop <- crop(SSC.pre, ext) # crops the image
+SSC.pre.crop <- crop(SSC.pre, ext) # crops the image using the coordinates in ext
 
 SSC.pre.crop.d <- as.data.frame(SSC.pre.crop, xy=TRUE) # transforms the matrix in a table
 
